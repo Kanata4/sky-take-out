@@ -4,4 +4,24 @@
 <mapper namespace="com.sky.mapper.DishMapper">
     <insert id="insert">
     </insert>
+    <select id="pageQuery" resultType="com.sky.vo.DishVO">
+        SELECT
+            d.*, c.name AS categoryName
+        FROM
+            dish d
+                LEFT OUTER JOIN
+            category c ON d.category_id = c.id
+            <where>
+                <if test="name != null and name != ''">
+                    and d.name link concat('%',#{name},'%'})
+                </if>
+                <if test="categoryId != null">
+                    and d.categoryId = #{categoryId}
+                </if>
+                <if test="status != null">
+                    and d.status = #{status}
+                </if>
+            </where>
+            order by d.create_time desc
+    </select>
 </mapper>
