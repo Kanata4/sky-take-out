@@ -7,7 +7,9 @@ import com.sky.constant.StatusConstant;
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
+import com.sky.entity.DishFlavor;
 import com.sky.exception.DeletionNotAllowedException;
+import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
@@ -26,6 +28,8 @@ public class DishServiceImpl implements DishService {
 
     @Autowired
     private DishMapper dishMapper;
+    @Autowired
+    private DishFlavorMapper dishFlavorMapper;
 
     /**
      * 新增菜品和对应的口味
@@ -76,5 +80,27 @@ public class DishServiceImpl implements DishService {
         //删除菜品表中的菜品数据
 
         //删除菜品关联的口味数据
+    }
+
+    /**
+     * 根据id查询菜品和对应的口味数据
+     * @param id
+     * @return
+     */
+    @Override
+    public DishVO getByIdWithFlavor(Long id) {
+        //根据id查询菜品数据
+        Dish dish = dishMapper.getById(id);
+
+        //根据菜品id查询口味数据
+        List<DishFlavor> dishFlavors = dishFlavorMapper.getByDishId(id);
+
+        //根据查询到的数据封装到VO
+        DishVO dishVO = new DishVO();
+        BeanUtils.copyProperties(dish,dishVO);
+        dishVO.setFlavors(dishFlavors);
+
+        //返回
+        return dishVO;
     }
 }
