@@ -34,4 +34,6 @@ public interface DishMapper {
      */
     @Select("select * from dish where id = #{id}")
     Dish getById(Long id);
+
+    void update(Dish dis);
 }
